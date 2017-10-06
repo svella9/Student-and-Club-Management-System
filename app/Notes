@@ -1,0 +1,8 @@
+Notes
+
+10/06/2017:
+	- Installed Python3 64-bit and added to path
+	- Installed virtualenv via pip
+	- Created a virtual env named sepro
+	- Installed flask and gunicorn
+	- Finally flask app working
