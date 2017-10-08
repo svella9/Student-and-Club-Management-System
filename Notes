@@ -1,0 +1,13 @@
+Notes
+
+06/10/2017:
+	- Installed Python3 64-bit and added to path
+	- Installed virtualenv via pip
+	- Created a virtual env named sepro
+	- Installed flask and gunicorn via pip
+	- Finally flask app working
+
+08/10/2017:
+	- Installed Postgresql-10 for windows
+	- Installed SQLAlchemy via pip
+	
