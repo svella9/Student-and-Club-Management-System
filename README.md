@@ -1,1 +1,1 @@
-"#Student and Club Management System"
+#Student and Club Management System
