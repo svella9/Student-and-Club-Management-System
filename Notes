@@ -17,3 +17,10 @@ Notes
 	- Wrote code(University.py) to define the schema of the database.
 	- Tables were created successfully after executing University.py.
 	- TODO: Create a Registration page to get the student and faculty details and populate the tables.
+
+15/10/2017:
+	- Installed flask_mail via pip.
+	- Installed Postman.
+	- Code to register student and faculty and add the record to the database.
+	- Code to send notifications to all students of specific semester.
+	- Ready to demonstrate to sir on Monday!
