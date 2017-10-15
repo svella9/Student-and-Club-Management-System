@@ -38,4 +38,20 @@ class Faculty(db.Model):
 	def __repr__(self):
 		return '<Faculty %r>' %self.name
 
+class Student_credential(db.Model):
+	usn = db.Column(db.String(12) , primary_key = True)
+	password = db.Column(db.String(50))
+
+	def __init__(self, usn, password):
+		self.usn = usn
+		self.password = password
+
+class Faculty_credential(db.Model):
+	fid = db.Column(db.String(12), primary_key = True)
+	password = db.Column(db.String(50), primary_key = True)
+
+	def __init__(self, fid, password):
+		self.fid = fid
+		self.password = password
+
 db.create_all()
