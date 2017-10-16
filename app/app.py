@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, abort
+from flask import Flask, flash, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 
@@ -17,7 +17,8 @@ mail = Mail(app)
 
 @app.route('/')
 def hello():
-	return "Hello World!!"
+	#return "Hello World!!"
+	return render_template('home.html')
 
 @app.route('/Student/register', methods = ['POST'])
 def student_register():
@@ -82,12 +83,14 @@ def send_notification(semester):
 	students = Student.query.filter_by(sem = semester).all()
 	#keep only the email-id of the students
 	students = list(map(lambda x : x.email, students))
-
+	#print('sending Message', students)
 	msg = Message('Meeting Schedule Notification.',
 			sender = 'pesfacultyadvisor.sepro2017@gmail.com',
 			recipients = students)
+	#print('Object created!')
 	msg.body = "Dear Student\n A meeting is scheduled on so and so date.\n We request you to attend the meeting."
 	mail.send(msg)
+
 	return "Notification Sent!!"
 
 
