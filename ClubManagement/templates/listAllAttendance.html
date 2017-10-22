@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+   <body>
+   
+      <table border = 1>
+         <thead>
+            <td>Name</td>
+            <td>Event</td>
+            <td>Date</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["name"]}}</td>
+               <td>{{row["event"]}}</td>
+               <td>{{row["d_ate"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      
+      <a href = "/addNewMember">Add more members</a>
+      
+   </body>
+</html>

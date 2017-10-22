@@ -1,0 +1,17 @@
+pip install flask-sqlit3 //to install SQL lite3
+sudo apt-get install python-virtualenv
+pip install flask //flask
+
+Navigate to the folder which contains cms.py(/home/ubuntu/CMS) and run the file
+
+Now open your browser and type http://localhost:5000/create this creates the database
+
+then type http://localhost:5000/addNewMember to add a member to the club
+type http://localhost:5000/addNewEvent to add an event in the club and so onnn
+
+
+rest of the API calls can be found in cms.py beside app.route
+
+
+In case of any errrs check conn = sqlite3.connect('/home/ubuntu/CMS/database.db')
+  place your files appropriately -> /home/ubuntu/CMS/database.db

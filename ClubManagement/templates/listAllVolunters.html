@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+   <body>
+   
+      <table border = 1>
+         <thead>
+            <td>Name</td>
+            <td>Event Name</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["name"]}}</td>
+               <td>{{row["event"]}}</td>
+            </tr>
+         {% endfor %}
+      </table>
+      
+      <a href = "/addNewEvent">Add more events</a>
+      
+   </body>
+</html>
