@@ -9,7 +9,7 @@ db = SQLAlchemy(app)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'pesfacultyadvisor.sepro2017@gmail.com'
-app.config['MAIL_PASSWORD'] = '*****'
+app.config['MAIL_PASSWORD'] = 'adminpesfacultyadvisor'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -93,6 +93,121 @@ def send_notification(semester):
 
 	return "Notification Sent!!"
 
+@app.route('/main/allocate')
+def allocate_advisor():
+	"""Allocate students to each faculty satisying constraints such as:
+		exactly 1 advisor per user
+		no overlapping sems for advisor
+		a faculty may not be advisor to any student"""
+	students=Student.query.all()
+	faculties=Faculty.query.all()
+	#average no of students per faculty
+	x=len(students)/len(faculties)
+	#sem no,extra students per faculty for that sem
+	sems={{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0}}
+	#allocation list for each sem 0-not allocated  >1 no of faculty allocated <1 imdicates extra faculty required
+	alloc={0,0,0,0,0,0,0,0}
+	#indicates the number of extra faculty available
+	spare=0;
+	#max no of students a faculty can take over average no of students taken by faculty
+	threshold=0.33
+	#students saved so far
+	extra=0
+	run =0
+	#second field denotes m/n ratio used to determing best sem to create spare
+	sparelist={{1,x},{2,x},{3,x},{4,x},{5,x},{6,x},{7,x},{8,x}}
+    """algo to decide optimum way to distribute faculties at the end no of faculties per sem is decided
+		1st run:
+		assigns faculties to all sems not crossing threshold limit
+		if possible frees faculties by assigning thier students to other faculties
+		2nd run:
+		assigns freed faculties in 1st run to those sems which have crossed threshold
+		extra:no of freed faculty
+		ex:
+		300 students in sem 2, 50 in sem 1
+        x=no of avg stud per faculty=30 threshold=0.33*30=10
+		i.e u can assign 10 more students for that faculty
+		sem 1 has 50 students ,1st 30 can be given to 1 faculty but the next 20 cross our threshold limit of 10
+        sem 2 has 300 students hence students can be equally distributed to 10 faculties or we can free a faculty
+		by increasing no of students per faculty to 33 instead of 30(done by create_spare())"""
+    while(len(sems)>0):
+        for i in sems:
+            semstud= Student.query.filter_by(sem = i).all()
+            n=len(semstud)/x
+            m=len(semstud)%x
+            if m/n<(threshold*x):
+                alloc[sems[i][0]]=n
+                extra+=m
+                if(extra>x):
+                    extra-=x
+                    spare+=1
+                    del sems[i]
+					sparelist[sems[i][0]][1]=m/n
+					#reduce the no of faculty required for sem if possible max spare required is 8 for 8 sems
+				elif run<1:
+					sems[i]=m/n
+				elif run>=1:
+					if(spare>0):
+						alloc[sems[i][0]]=n+1
+						spare--
+						del sems[i]
+					else :
+						#this sort is to use the sem with best chances of creating spare faculty
+						#can be improved extra students/no of faculty cannot be the sole factor in determining best sem for reduction
+						#checks only one sem for reduction...can be improved
+						sparelist.sort(key=lambda k: (-k[1]))
+						f=create_spare(sparelist[0][0],x,threshold)
+						alloc[sparelist[0][0]]-=f
+						alloc[sems[i][0]]=n+f
+						sparelist[0][1]*=((alloc[sparelist[0][0]]+f)/alloc[sparelist[0][0]])
+						del sems[i]
+			#this sort is to address 1st in next run
+			sems.sort(key=lambda k: (-k[1]))
+			run++
+		#actually distributing faculties
+		for i in range(1,8):
+			distribute(i,alloc)
+
+
+
+def create_spare(i,x):
+	semstud= Student.query.filter_by(sem = i).all()
+	n=len(semstud)/x
+	m=len(semstud)%x
+	x=x+x*threshold
+	#using max no of stud per faculty
+	n1=len(semstud)/x
+	m1=len(semstud)%x
+	if n1<n:
+		return 1
+	else
+		return 0
+
+def distribute(i,alloc)
+	#alloc is the no of faculties allocated per sem
+	n=alloc[i]
+	semstud= Student.query.filter_by(sem = i).all()
+	for j in range(0,alloc[i]):
+		alist[j]=len(semstud)/n
+	m=len(semstud)%n
+	k=0
+	#alist contains exact no of students per faculty
+	while(m):
+		alist[k]++
+		m--
+		if k+1>n:
+			k=0
+		else
+			k++
+	#sem =-1 indicates that faculty has not been assigned to any sem
+	#proposed: improve the algo by assigning experienced lecturers to students in later sem
+	faculties=Faculty.query.filter_by(sem=-1).all()
+	k=0
+	for j in range(0,n-1):
+		faculties[j].sem=i
+		for b in range(1,alist[j]):
+			semstud[k++].advisor=faculties[j].name
+	db.session.commit()
 
 if __name__ == '__main__':
 	app.run(debug = True)

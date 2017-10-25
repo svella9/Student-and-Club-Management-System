@@ -9,7 +9,8 @@ class Student(db.Model):
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
 	mob = db.Column(db.Integer, unique = True)
-
+	advisor = db.Column(db.String(25))
+	visited=db.Column(db.Boolean())
 	def __init__(self, usn, name, sem, dept, email, mob):
 		self.usn = usn
 		self.name = name
@@ -17,7 +18,8 @@ class Student(db.Model):
 		self.dept = dept
 		self.email = email
 		self.mob = mob
-
+		self.advisor= "none"
+		self.visited= 'false'
 	def __repr__(self):
 		return '<Student %r>' % self.name
 
@@ -27,14 +29,16 @@ class Faculty(db.Model):
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
 	mob = db.Column(db.Integer, unique = True)
-
+	date=db.Column(db.DateTime)
+	sem=db.Column(db.Integer)
 	def __init__(self, fid, name, dept, email, mob):
 		self.fid = fid
 		self.name = name
 		self.dept = dept
 		self.email = email
 		self.mob = mob
-
+		self.sem=-1
+	
 	def __repr__(self):
 		return '<Faculty %r>' %self.name
 
