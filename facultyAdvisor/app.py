@@ -1,5 +1,6 @@
 from flask import Flask, flash, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy.exc
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
@@ -20,61 +21,76 @@ def hello():
 	#return "Hello World!!"
 	return render_template('home.html')
 
-@app.route('/Student/register', methods = ['POST'])
+@app.route('/Student/register/', methods = ['POST'])
 def student_register():
 	from University import Student, Faculty, Student_credential, Faculty_credential
+	try:
+		if request.method == 'POST':
+			usn = request.form['usn']
+			name = request.form['name']
+			sem = request.form['sem']
+			dept = request.form['dept']
+			email = request.form['email']
+			mob = request.form['mob']
+			password = request.form['password']
 
-	if request.method == 'POST':
-		usn = request.form['usn']
-		name = request.form['name']
-		sem = request.form['sem']
-		dept = request.form['dept']
-		email = request.form['email']
-		mob = request.form['mob']
-		password = request.form['password']
+			#Create a student object to insert into the Student table
+			student = Student(usn, name, sem, dept, email, mob)
+			student_credential = Student_credential(usn, password)
 
-		#Create a student object to insert into the Student table
-		student = Student(usn, name, sem, dept, email, mob)
-		student_credential = Student_credential(usn, password)
+			db.session.add(student)
+			db.session.add(student_credential)
+			db.session.commit()
 
-		db.session.add(student)
-		db.session.add(student_credential)
-		db.session.commit()
+			return 'Student Record added successfully!!'
 
-		return 'Student Record added successfully!!'
+		else:
+			#Bad Request
+			abort(400)
 
-	else:
-		#Bad Request
-		abort(400)
+	except sqlalchemy.exc.IntergrityError:
+		db.session.rollback()
+		return "Account already exists.."
 
-@app.route('/Faculty/register', methods = ['POST'])
+	except:
+		db.session.rollback()
+		return "Cannot register user..."
+
+@app.route('/Faculty/register/', methods = ['POST'])
 def faculty_register():
 	from University import Student, Faculty, Student_credential, Faculty_credential
 
-	if request.method == 'POST':
-		fid = request.form['fid']
-		name = request.form['name']
-		dept = request.form['dept']
-		email = request.form['email']
-		mob = request.form['mob']
-		password = request.form['password']
+	try:
+		if request.method == 'POST':
+			fid = request.form['fid']
+			name = request.form['name']
+			dept = request.form['dept']
+			email = request.form['email']
+			mob = request.form['mob']
+			password = request.form['password']
 
-		#Create a faculty object to insert into the Faculty table
-		faculty = Faculty(fid, name, dept, email, mob)
-		faculty_credential = Faculty_credential(fid, password)
+			#Create a faculty object to insert into the Faculty table
+			faculty = Faculty(fid, name, dept, email, mob)
+			faculty_credential = Faculty_credential(fid, password)
 
-		db.session.add(faculty)
-		db.session.add(faculty_credential)
-		db.session.commit()
+			db.session.add(faculty)
+			db.session.add(faculty_credential)
+			db.session.commit()
 
-		return 'Faculty Record added successfully!!'
+			return 'Faculty Record added successfully!!'
 
-	else:
-		#Bad Request
-		abort(400)
+		else:
+			#Bad Request
+			abort(400)
+	except sqlalchemy.exc.IntergrityError:
+		db.session.rollback()
+		return "Account already exists..."
+	except:
+		db.session.rollback()
+		return "Cannot register..."
 
 
-@app.route('/notify/<int:semester>')
+@app.route('/notify/<int:semester>/')
 def send_notification(semester):
 	"""Send notification to all students belonging to a particular semester"""
 
@@ -93,43 +109,51 @@ def send_notification(semester):
 
 	return "Notification Sent!!"
 
-@app.route('/Student/savefeedback', methods = ['POST'])
+@app.route('/Student/savefeedback/', methods = ['POST'])
 def student_save_feedback():
 	"""Save the feedback/issues given by the student in the database"""
 	from University import Student, Student_feedback
-	if request.method == 'POST':
-		usn = request.form['usn']
-		feedback = request.form['feedback']
+	try:
+		if request.method == 'POST':
+			usn = request.form['usn']
+			feedback = request.form['feedback']
 
-		#get the student object from the table bearing the usn
-		q = Student.query.filter_by(usn = usn).first()
-		#pass the student object to the Student_feedback class for the purpose of foreign key establishment.
-		student_feedback = Student_feedback(feedback = feedback, student = q)
-		db.session.add(student_feedback)
-		db.session.commit()
-		return "Feedback Submitted successfully!"
+			#get the student object from the table bearing the usn
+			q = Student.query.filter_by(usn = usn).first()
+			#pass the student object to the Student_feedback class for the purpose of foreign key establishment.
+			student_feedback = Student_feedback(feedback = feedback, student = q)
+			db.session.add(student_feedback)
+			db.session.commit()
+			return "Feedback Submitted successfully!"
 
-	else:
-		abort(400)
+		else:
+			abort(400)
+	except:
+		db.session.rollback()
+		return "Cannot save feedback..."
 
-@app.route('/Faculty/savefeedback', methods = ['POST'])
+@app.route('/Faculty/savefeedback/', methods = ['POST'])
 def faculty_save_feedback():
 	"""Save the feedback given by the faculty for a student in the database"""
 	from University import Student, Faculty, Faculty_feedback
-	if request.method == 'POST':
-		fid = request.form['fid']
-		student_usn = request.form['student_usn']
-		feedback = request.form['feedback']
+	try:
+		if request.method == 'POST':
+			fid = request.form['fid']
+			student_usn = request.form['student_usn']
+			feedback = request.form['feedback']
 
-		#get the faculty object bearing the fid
-		faculty = Faculty.query.filter_by(fid = fid).first()
-		#get the student object bearing the usn
-		student = Student.query.filter_by(usn = student_usn).first()
-		#pass the faculty and student object to the Faculty_feedback class for the purpose of foreign key establishment.
-		faculty_feedback = Faculty_feedback(feedback = feedback, faculty = faculty, student = student)
-		db.session.add(faculty_feedback)
-		db.session.commit()
-		return "Your feedback is submitted!"
+			#get the faculty object bearing the fid
+			faculty = Faculty.query.filter_by(fid = fid).first()
+			#get the student object bearing the usn
+			student = Student.query.filter_by(usn = student_usn).first()
+			#pass the faculty and student object to the Faculty_feedback class for the purpose of foreign key establishment.
+			faculty_feedback = Faculty_feedback(feedback = feedback, faculty = faculty, student = student)
+			db.session.add(faculty_feedback)
+			db.session.commit()
+			return "Your feedback is submitted!"
 
-	else:
-		abort(400)
+		else:
+			abort(400)
+	except:
+		db.session.rollback()
+		return "Cannot save feedback..."
