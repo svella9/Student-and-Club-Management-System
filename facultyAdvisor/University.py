@@ -1,6 +1,7 @@
 #UNIVERSITY DATABASE
 #Define SCHEMA of the DATABASE
 from app import db
+from datetime import datetime
 
 class Student(db.Model):
 	usn = db.Column(db.String(12), primary_key = True)
@@ -9,6 +10,11 @@ class Student(db.Model):
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
 	mob = db.Column(db.Integer, unique = True)
+
+	#foreign key relationship
+	#backref: creates a virtual column called 'student' in 'Student_feedback' class that references the 'Student' class.
+	feedback_by_student = db.relationship('Student_feedback' , backref = 'student', lazy = 'dynamic')
+	feedback_by_faculty = db.relationship('Faculty_feedback', backref = 'student', lazy = 'dynamic')
 
 	def __init__(self, usn, name, sem, dept, email, mob):
 		self.usn = usn
@@ -27,6 +33,8 @@ class Faculty(db.Model):
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
 	mob = db.Column(db.Integer, unique = True)
+
+	feedback_by_faculty = db.relationship('Faculty_feedback', backref = 'faculty', lazy = 'dynamic')
 
 	def __init__(self, fid, name, dept, email, mob):
 		self.fid = fid
@@ -53,5 +61,30 @@ class Faculty_credential(db.Model):
 	def __init__(self, fid, password):
 		self.fid = fid
 		self.password = password
+
+class Student_feedback(db.Model):
+	id = db.Column(db.Integer , primary_key = True)
+	usn = db.Column(db.String(12) , db.ForeignKey('student.usn'))
+	#Record the current date and time when the row is inserted
+	date = db.Column(db.DateTime() , default = datetime.now())
+	feedback = db.Column(db.String(200))
+
+	def __init__(self, feedback, student):
+		self.feedback = feedback
+		self.student = student
+
+class Faculty_feedback(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	fid = db.Column(db.String(12), db.ForeignKey('faculty.fid'))
+	student_usn = db.Column(db.String(12), db.ForeignKey('student.usn'))
+	#Record the current date and time when the row is inserted
+	date = db.Column(db.DateTime() , default = datetime.now())
+	feedback = db.Column(db.String(200))
+
+	def __init__(self, feedback, faculty, student):
+		self.feedback = feedback
+		self.faculty = faculty
+		self.student = student
+
 
 db.create_all()
