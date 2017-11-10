@@ -15,7 +15,8 @@ class Student(db.Model):
 	#backref: creates a virtual column called 'student' in 'Student_feedback' class that references the 'Student' class.
 	feedback_by_student = db.relationship('Student_feedback' , backref = 'student', lazy = 'dynamic')
 	feedback_by_faculty = db.relationship('Faculty_feedback', backref = 'student', lazy = 'dynamic')
-
+	student_n_advisor = db.relationship('Student_and_advisor', backref = 'student', lazy = 'dynamic')
+	
 	def __init__(self, usn, name, sem, dept, email, mob):
 		self.usn = usn
 		self.name = name
@@ -35,6 +36,7 @@ class Faculty(db.Model):
 	mob = db.Column(db.Integer, unique = True)
 
 	feedback_by_faculty = db.relationship('Faculty_feedback', backref = 'faculty', lazy = 'dynamic')
+	faculty_advisor = db.relationship('Student_and_advisor', backref = 'faculty', lazy = 'dynamic' )
 
 	def __init__(self, fid, name, dept, email, mob):
 		self.fid = fid
@@ -86,5 +88,16 @@ class Faculty_feedback(db.Model):
 		self.faculty = faculty
 		self.student = student
 
+
+class Student_and_advisor(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	usn = db.Column(db.String(12), db.ForeignKey('student.usn'), unique = True)
+	fid = db.Column(db.String(12), db.ForeignKey('faculty.fid'))
+
+	def __init__(self, usn, fid):
+		self.usn = usn
+		self.fid = fid
+		self.student = student
+		self.faculty = faculty
 
 db.create_all()

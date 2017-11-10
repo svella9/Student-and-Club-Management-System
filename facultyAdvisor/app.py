@@ -186,8 +186,16 @@ def faculty_login():
 
 			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == fid , Faculty_credential.password == password)).first()
 			if obj != None:
+				#return redirect(url_for('faculty_home', fid = fid))
 				return "Success.."
 			else:
 				return "Enter correct fid/password..."
 	except:
 		return "Error..."
+
+@app.route('/Faculty/home/<int:fid>/')
+def faculty_home(fid):
+	from University import Student, Faculty, Student_and_advisor
+	try:
+		q = Student_and_advisor.query.filter_by(fid = fid).all()
+		return render_template('facultyHomepage.html', advisors_students = q)
