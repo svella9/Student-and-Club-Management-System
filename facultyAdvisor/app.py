@@ -1,6 +1,7 @@
 from flask import Flask, flash, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy.exc
+from sqlalchemy import and_, or_
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
@@ -157,3 +158,36 @@ def faculty_save_feedback():
 	except:
 		db.session.rollback()
 		return "Cannot save feedback..."
+
+
+@app.route('/Student/login/', methods = ['POST'])
+def student_login():
+	from University import Student, Student_credential
+	try:
+		if request.method == 'POST':
+			usn = request.form['usn']
+			password = request.form['password']
+
+			obj = Student_credential.query.filter(and_(Student_credential.usn == usn, Student_credential.password == password)).first()
+			if obj != None:
+				return "Sucess"
+			else:
+				return "Enter correct usn/password..."
+	except:
+		return "Error.."
+
+@app.route('/Faculty/login/', methods = ['POST'])
+def faculty_login():
+	from University import Faculty, Faculty_credential
+	try:
+		if request.method == 'POST':
+			fid = request.form['fid']
+			password = request.form['password']
+
+			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == fid , Faculty_credential.password == password)).first()
+			if obj != None:
+				return "Success.."
+			else:
+				return "Enter correct fid/password..."
+	except:
+		return "Error..."
