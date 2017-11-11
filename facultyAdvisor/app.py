@@ -8,10 +8,12 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mypassword@localhost/University' #URI format: 'postgres://username:password@localhost/database_name'
 db = SQLAlchemy(app)
 
+mail_credentials = open('credentials.txt').read().split('\n')
+#print(mail_credentials)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'pesfacultyadvisor.sepro2017@gmail.com'
-app.config['MAIL_PASSWORD'] = '*****'
+app.config['MAIL_USERNAME'] = mail_credentials[0]
+app.config['MAIL_PASSWORD'] = mail_credentials[1]
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -199,3 +201,5 @@ def faculty_home(fid):
 	try:
 		q = Student_and_advisor.query.filter_by(fid = fid).all()
 		return render_template('facultyHomepage.html', advisors_students = q)
+	except:
+		pass
