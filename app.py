@@ -20,16 +20,32 @@ mail = Mail(app)
 
 
 @app.route('/')
-def hello():
+def index():
 	#return "Hello World!!"
-	return render_template('home.html')
+	return render_template('FacultyAdvisor.html')
+
+@app.route('/getStudentLogin/')
+def getStudentLogin():
+	return render_template('studentlogin.html')
+
+@app.route('/getFacultyLogin/')
+def getFacultyLogin():
+	return render_template('facultylogin.html')	
+
+@app.route('/getStudentRegistration/')
+def getStudentRegistration():
+	return render_template('studentregistration.html')	
+
+@app.route('/getFacultyRegistration/')
+def getFacultyRegistration():
+	return render_template('facultyregistration.html')		
 
 @app.route('/Student/register/', methods = ['POST'])
 def student_register():
 	from University import Student, Faculty, Student_credential, Faculty_credential
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn']
+			usn = request.form['usn'].lower()
 			name = request.form['name']
 			sem = request.form['sem']
 			dept = request.form['dept']
@@ -65,7 +81,7 @@ def faculty_register():
 
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid']
+			fid = request.form['fid'].lower()
 			name = request.form['name']
 			dept = request.form['dept']
 			email = request.form['email']
@@ -118,7 +134,7 @@ def student_save_feedback():
 	from University import Student, Student_feedback
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn']
+			usn = request.form['usn'].lower()
 			feedback = request.form['feedback']
 
 			#get the student object from the table bearing the usn
@@ -141,8 +157,8 @@ def faculty_save_feedback():
 	from University import Student, Faculty, Faculty_feedback
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid']
-			student_usn = request.form['student_usn']
+			fid = request.form['fid'].lower()
+			student_usn = request.form['student_usn'].lower()
 			feedback = request.form['feedback']
 
 			#get the faculty object bearing the fid
@@ -167,7 +183,7 @@ def student_login():
 	from University import Student, Student_credential
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn']
+			usn = request.form['usn'].lower()
 			password = request.form['password']
 
 			obj = Student_credential.query.filter(and_(Student_credential.usn == usn, Student_credential.password == password)).first()
@@ -183,7 +199,7 @@ def faculty_login():
 	from University import Faculty, Faculty_credential
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid']
+			fid = request.form['fid'].lower()
 			password = request.form['password']
 
 			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == fid , Faculty_credential.password == password)).first()
