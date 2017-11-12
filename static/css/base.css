@@ -1,0 +1,10 @@
+﻿.top h3{
+    position:relative;
+    left:70px;
+}
+.top {
+    height:15vh;
+}
+.wrapper {
+    min-height:50vh;
+}
