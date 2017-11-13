@@ -99,3 +99,6 @@ class Student_and_advisor(db.Model):
 		self.fid = fid
 		self.student = student
 		self.faculty = faculty
+
+
+db.create_all()
