@@ -192,15 +192,18 @@ def student_login():
 	from University import Student, Student_credential
 	try:
 		if request.method == 'POST':
+			print('post')
 			usn = request.form['usn'].lower()
 			password = request.form['password']
-
+			print(usn, password)
 			obj = Student_credential.query.filter(and_(Student_credential.usn == usn, Student_credential.password == password)).first()
+			print(obj)
 			if obj != None:
 				return "Sucess"
 			else:
 				return "Enter correct usn/password..."
-	except:
+	except Exception as e:
+		print(e)
 		return "Error.."
 
 @app.route('/Faculty/login/', methods = ['POST'])
