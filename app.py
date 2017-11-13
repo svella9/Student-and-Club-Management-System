@@ -5,7 +5,16 @@ from sqlalchemy import and_, or_
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mypassword@localhost/University' #URI format: 'postgres://username:password@localhost/database_name'
+POSTGRES = {
+	'user' : 'qxccmophyqzgyq',
+	'pw' : '767a822d6490e361bd0ae575af9bdc992e2a80dae76061f189c658e6de864064',
+	'db' : 'd5d9l9desafg81',
+	'host' : 'ec2-184-73-159-137.compute-1.amazonaws.com',
+	'port' : '5432',
+}
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://qxccmophyqzgyq:767a822d6490e361bd0ae575af9bdc992e2a80dae76061f189c658e6de864064@ec2-184-73-159-137.compute-1.amazonaws.com:5432/d5d9l9desafg81' % POSTGRES #'postgresql://postgres:mypassword@localhost/University' #URI format: 'postgres://username:password@localhost/database_name'
+app.config['SECRET_KEY'] = 'super-secret'
+app.config['SECURITY_REGISTERABLE'] = True
 db = SQLAlchemy(app)
 
 mail_credentials = open('credentials.txt').read().split('\n')
@@ -67,13 +76,13 @@ def student_register():
 			#Bad Request
 			abort(400)
 
-	except sqlalchemy.exc.IntergrityError:
+	except sqlalchemy.exc.IntegrityError:
 		db.session.rollback()
 		return "Account already exists.."
 
-	except:
-		db.session.rollback()
-		return "Cannot register user..."
+	#except:
+	#	db.session.rollback()
+	#	return "Cannot register user..."
 
 @app.route('/Faculty/register/', methods = ['POST'])
 def faculty_register():
@@ -101,12 +110,12 @@ def faculty_register():
 		else:
 			#Bad Request
 			abort(400)
-	except sqlalchemy.exc.IntergrityError:
+	except sqlalchemy.exc.IntegrityError:
 		db.session.rollback()
 		return "Account already exists..."
-	except:
-		db.session.rollback()
-		return "Cannot register..."
+	#except:
+	#	db.session.rollback()
+	#	return "Cannot register..."
 
 
 @app.route('/notify/<int:semester>/')
