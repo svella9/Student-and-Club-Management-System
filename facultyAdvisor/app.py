@@ -95,10 +95,10 @@ def send_notification(semester):
 
 @app.route('/main/allocate')
 def allocate_advisor():
-	"""Allocate students to each faculty satisying constraints such as:
-		exactly 1 advisor per user
-		no overlapping sems for advisor
-		a faculty may not be advisor to any student"""
+	#Allocate students to each faculty satisying constraints such as:
+	#	exactly 1 advisor per user
+	#	no overlapping sems for advisor
+	#	a faculty may not be advisor to any student"""
 	students=Student.query.all()
 	faculties=Faculty.query.all()
 	#average no of students per faculty
@@ -115,22 +115,8 @@ def allocate_advisor():
 	extra=0
 	run =0
 	#second field denotes m/n ratio used to determing best sem to create spare
-	sparelist={{1,x},{2,x},{3,x},{4,x},{5,x},{6,x},{7,x},{8,x}}
-    """algo to decide optimum way to distribute faculties at the end no of faculties per sem is decided
-		1st run:
-		assigns faculties to all sems not crossing threshold limit
-		if possible frees faculties by assigning thier students to other faculties
-		2nd run:
-		assigns freed faculties in 1st run to those sems which have crossed threshold
-		extra:no of freed faculty
-		ex:
-		300 students in sem 2, 50 in sem 1
-        x=no of avg stud per faculty=30 threshold=0.33*30=10
-		i.e u can assign 10 more students for that faculty
-		sem 1 has 50 students ,1st 30 can be given to 1 faculty but the next 20 cross our threshold limit of 10
-        sem 2 has 300 students hence students can be equally distributed to 10 faculties or we can free a faculty
-		by increasing no of students per faculty to 33 instead of 30(done by create_spare())"""
-    while(len(sems)>0):
+	sparelist=[[1,x],[2,x],[3,x],[4,x],[5,x],[6,x],[7,x],[8,x]]
+    while len(sems)>0:
         for i in sems:
             semstud= Student.query.filter_by(sem = i).all()
             n=len(semstud)/x
@@ -142,31 +128,31 @@ def allocate_advisor():
                     extra-=x
                     spare+=1
                     del sems[i]
-					sparelist[sems[i][0]][1]=m/n
+                    sparelist[sems[i][0]][1]=m/n
 					#reduce the no of faculty required for sem if possible max spare required is 8 for 8 sems
-				elif run<1:
-					sems[i]=m/n
-				elif run>=1:
-					if(spare>0):
-						alloc[sems[i][0]]=n+1
-						spare--
-						del sems[i]
-					else :
-						#this sort is to use the sem with best chances of creating spare faculty
+            elif run<1:
+                sems[i]=m/n
+            elif run>=1:
+                if(spare>0):
+                    alloc[sems[i][0]]=n+1
+                    spare-=1
+                    del sems[i]
+                else:	
+                    #this sort is to use the sem with best chances of creating spare faculty
 						#can be improved extra students/no of faculty cannot be the sole factor in determining best sem for reduction
 						#checks only one sem for reduction...can be improved
-						sparelist.sort(key=lambda k: (-k[1]))
-						f=create_spare(sparelist[0][0],x,threshold)
-						alloc[sparelist[0][0]]-=f
-						alloc[sems[i][0]]=n+f
-						sparelist[0][1]*=((alloc[sparelist[0][0]]+f)/alloc[sparelist[0][0]])
-						del sems[i]
-			#this sort is to address 1st in next run
-			sems.sort(key=lambda k: (-k[1]))
-			run++
+                    sparelist.sort(key=lambda k: (-k[1]))
+                    f=create_spare(sparelist[0][0],x,threshold)
+                    alloc[sparelist[0][0]]-=f
+                    alloc[sems[i][0]]=n+f
+                    sparelist[0][1]*=((alloc[sparelist[0][0]]+f)/alloc[sparelist[0][0]])
+                    del sems[i]
+        #this sort is to address 1st in next run
+        sems.sort(key=lambda k: (-k[1]))
+        run+=1
 		#actually distributing faculties
-		for i in range(1,8):
-			distribute(i,alloc)
+    for i in range(1,8):
+		distribute(i,alloc)
 
 
 
@@ -180,10 +166,10 @@ def create_spare(i,x):
 	m1=len(semstud)%x
 	if n1<n:
 		return 1
-	else
+	else:
 		return 0
 
-def distribute(i,alloc)
+def distribute(i,alloc):
 	#alloc is the no of faculties allocated per sem
 	n=alloc[i]
 	semstud= Student.query.filter_by(sem = i).all()
@@ -193,20 +179,21 @@ def distribute(i,alloc)
 	k=0
 	#alist contains exact no of students per faculty
 	while(m):
-		alist[k]++
-		m--
+		alist[k]+=1
+		m-=1
 		if k+1>n:
 			k=0
-		else
-			k++
+		else:
+			k+=1
 	#sem =-1 indicates that faculty has not been assigned to any sem
 	#proposed: improve the algo by assigning experienced lecturers to students in later sem
 	faculties=Faculty.query.filter_by(sem=-1).all()
 	k=0
 	for j in range(0,n-1):
-		faculties[j].sem=i
+        faculties[j].sem=i
 		for b in range(1,alist[j]):
-			semstud[k++].advisor=faculties[j].name
+            semstud[k].advisor=faculties[j].name
+            k+=1
 	db.session.commit()
 
 if __name__ == '__main__':
