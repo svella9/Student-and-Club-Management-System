@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<title>Student Homepage</title>
+		<style type="text/css">
+			
+		</style>
+	</head>	
+	<body>
+		<div>
+			Hello {{ student.name }}!
+			<a href = "{{ url_for('student_logout') }}"><input type="button" value = "logout"></a>
+		</div><br>
+
+		<div>
+			Your Advisor : {{ advisor.name }}<br>
+			E-mail: {{ advisor.email }}<br>
+			Mob: {{ advisor.mob }}
+		</div><br>
+
+		<center>
+			{% if feedbacks|length > 1 %}
+			<table>
+				<thead>
+					<tr><th>Date and Time</th><th>Feedback</th></tr>
+				</thead>
+				<tbody>
+					{ % for feedback in feedbacks % }
+					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
+					{ % endfor % }
+				</tbody>
+			</table>
+			{% else %}
+			<div> No feedback given yet! </div>
+			{% endif %}
+		</center>
+	</body>
+</html>

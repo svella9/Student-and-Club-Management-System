@@ -1,17 +1,32 @@
 <html>
 <head>
 	<title>Faculty Homepage</title>
+	<style>
+
+	</style>
 </head>
 <body>
-	<table>
-		<thead>
-			<tr><th>Student usn</th><th>Student name</th><th>Student e-mail</th></tr>
-		</thead>
-		<tbody>
-			{ % for student in advisors_students % }
-			<tr><a href = "#"><td> {{ student.usn }} </td><td> {{ student.student.name }} </td><td> {{ student.student.email }} </td></a></tr>
-			{ % endfor % }
-		</tbody>
-	</table>
+	<div>
+		Hello {{ name }}!
+		<a href = "{{ url_for('faculty_logout') }}"><input type="button" value = "logout"></a>
+	</div>
+
+	<center>
+		{% if advisors_students|length > 1 %}		
+		<table>
+			<thead>
+				<tr><th>Student usn</th><th>Student name</th><th>Student e-mail</th></tr>
+			</thead>
+			<tbody>
+				{ % for student in advisors_students % }
+				<tr><a href = "#"><td> {{ student.usn }} </td><td> {{ student.student.name }} </td><td> {{ student.student.email }} </td></a></tr>
+				{ % endfor % }
+			</tbody>
+		</table>
+		
+		{% else %}
+		<div> No students alloted yet!</div>
+		{% endif %}
+	</center>
 </body>
 </html>

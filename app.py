@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, abort, render_template
+from flask import Flask, flash, request, redirect, abort, render_template, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy.exc
 from sqlalchemy import and_, or_
@@ -186,25 +186,31 @@ def faculty_save_feedback():
 		db.session.rollback()
 		return "Cannot save feedback..."
 
-
 @app.route('/Student/login/', methods = ['POST'])
 def student_login():
 	from University import Student, Student_credential
 	try:
 		if request.method == 'POST':
-			print('post')
 			usn = request.form['usn'].lower()
 			password = request.form['password']
-			print(usn, password)
 			obj = Student_credential.query.filter(and_(Student_credential.usn == usn, Student_credential.password == password)).first()
-			print(obj)
 			if obj != None:
-				return "Sucess"
+				session['usn'] = usn
+				#return "Sucess"
+				return redirect(url_for('student_home'))
 			else:
 				return "Enter correct usn/password..."
 	except Exception as e:
 		print(e)
 		return "Error.."
+
+
+@app.route('/Student/logout/')
+def student_logout():
+	#remove the usn from the session
+	session.pop('usn', None)
+	return redirect(url_for('getStudentLogin'))
+
 
 @app.route('/Faculty/login/', methods = ['POST'])
 def faculty_login():
@@ -217,17 +223,59 @@ def faculty_login():
 			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == fid , Faculty_credential.password == password)).first()
 			if obj != None:
 				#return redirect(url_for('faculty_home', fid = fid))
-				return "Success.."
+				session['fid'] = fid
+				print(session['fid'])
+				#return "Success.."
+				return redirect(url_for('faculty_home'))
 			else:
 				return "Enter correct fid/password..."
-	except:
+	except Exception as e:
+		print(e)
 		return "Error..."
 
-@app.route('/Faculty/home/<int:fid>/')
-def faculty_home(fid):
+
+@app.route('/Faculty/logout/')
+def faculty_logout():
+	#remove the fid from the session
+	print('faculty logout')
+	session.pop('fid', None)
+	print('fid' in session)
+	return redirect(url_for('getFacultyLogin'))
+
+
+@app.route('/Faculty/home/')
+def faculty_home():
 	from University import Student, Faculty, Student_and_advisor
 	try:
-		q = Student_and_advisor.query.filter_by(fid = fid).all()
-		return render_template('facultyHomepage.html', advisors_students = q)
-	except:
-		pass
+		#return "Success"
+		if 'fid' in session:
+			fid = session['fid']
+			fobj = Faculty.query.filter_by(fid = fid).first()
+			q = Student_and_advisor.query.filter_by(fid = fid).all()
+			return render_template('facultyHomepage.html', name = fobj.name, advisors_students = q)
+		else:
+			print('Please login')
+			return redirect(url_for('getFacultyLogin'))
+	
+	except Exception as e:
+		print(e)
+		return "Error..."
+
+
+@app.route('/Student/home/')
+def student_home():
+	from University import Student, Student_feedback, Student_and_advisor
+	try:
+		if 'usn' in session:
+			usn = session['usn']
+			sobj = Student.query.filter_by(usn = usn).first()
+			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
+			q = Student_feedback.query.filter_by(usn = usn).all()
+			return render_template('studentHomepage.html', student = sobj, advisor = fobj, feedbacks = q)
+		else:
+			print('Please login')
+			return redirect(url_for('getStudentLogin'))
+
+	except Exception as e:
+		print(e)
+		return "Error..."
