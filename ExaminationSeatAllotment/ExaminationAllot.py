@@ -1,10 +1,11 @@
 from flask import Flask, flash, request, abort, render_template
-#from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:mypassword@localhost/University' #URI format: 'postgres://username:password@localhost/database_name'
-#db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/University' #URI format: 'postgres://username:password@localhost/database_name'
+db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
@@ -12,7 +13,7 @@ def index():
 
 
 @app.route('/allotSeats/', methods =['POST', 'GET'])
-def ExaminationSeatAllotment():
+def examination_seat_allotment():
     if request.method == 'POST':
         print(request.form.getlist('scode'))
         print(request.form.getlist('hallcode'))
@@ -51,4 +52,4 @@ def ExaminationSeatAllotment():
         return "Submit"
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug = True,host="127.0.0.1",port=50001)

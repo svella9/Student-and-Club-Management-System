@@ -1,6 +1,6 @@
-from app import db
+from ExaminationAllot import db
 
-class Student_subject_code(db.Model):
+class student_subject_code(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     usn = db.Column(db.String(12))
     scode = db.Column(db.String(12))
@@ -9,7 +9,7 @@ class Student_subject_code(db.Model):
         self.scode = scode
 
 
-class Exam_hall(db.Model):
+class exam_hall(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     hallno = db.Column(db.String(5))
     no_of_benches = db.Column(db.Integer)
@@ -19,7 +19,7 @@ class Exam_hall(db.Model):
         self.no_of_benches = no_of_benches
 
 
-class Faculty_subject_code(db.Model):
+class faculty_subject_code(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     fid = db.Column(db.String(12))
     scode = db.Column(db.String(12))
@@ -27,3 +27,5 @@ class Faculty_subject_code(db.Model):
     def __init__(self, fid, scode):
         self.fid = fid
         self.scode = scode
+
+db.create_all()
