@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Seating Arrangement</title>
+</head>
+<body>
+	<div>
+		{% for key, value in hall_and_students.iteritems() %}
+			<b> {{ key }} </b><br>
+			{% for student_pair in value %}
+				{{ student_pair }}<br>
+			{% endfor %}
+			<br>
+		{{% endfor %}}
+	</div>
+</body>
+</html>
