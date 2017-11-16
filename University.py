@@ -58,7 +58,7 @@ class Student_credential(db.Model):
 
 class Faculty_credential(db.Model):
 	fid = db.Column(db.String(12), primary_key = True)
-	password = db.Column(db.String(50), primary_key = True)
+	password = db.Column(db.String(50))
 
 	def __init__(self, fid, password):
 		self.fid = fid

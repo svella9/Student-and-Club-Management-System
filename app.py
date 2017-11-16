@@ -118,24 +118,33 @@ def faculty_register():
 	#	return "Cannot register..."
 
 
-@app.route('/notify/<int:semester>/')
-def send_notification(semester):
+@app.route('/admin/notify/', methods = ['POST'])
+def send_notification():
 	"""Send notification to all students belonging to a particular semester"""
+	try:
+		if request.method == 'POST':
+			date = request.form['date']
+			semester = request.form['semester']
 
-	from University import Student
-	#query to retrieve students
-	students = Student.query.filter_by(sem = semester).all()
-	#keep only the email-id of the students
-	students = list(map(lambda x : x.email, students))
-	#print('sending Message', students)
-	msg = Message('Meeting Schedule Notification.',
-			sender = 'pesfacultyadvisor.sepro2017@gmail.com',
-			recipients = students)
-	#print('Object created!')
-	msg.body = "Dear Student\n A meeting is scheduled on so and so date.\n We request you to attend the meeting."
-	mail.send(msg)
+			from University import Student
+			#query to retrieve students
+			students = Student.query.filter_by(sem = semester).all()
+			#keep only the email-id of the students
+			students = list(map(lambda x : x.email, students))
+			#print('sending Message', students)
+			msg = Message('Meeting Schedule Notification.',
+					sender = 'pesfacultyadvisor.sepro2017@gmail.com',
+					recipients = students)
+			#print('Object created!')
+			msg.body = "Dear Student\n A meeting is scheduled on " + date + ".\n We request you to meet your faculty advisor."
+			mail.send(msg)
 
-	return "Notification Sent!!"
+			return "Notification Sent!!"
+
+	except Exception as e:
+		print(e)
+		return "Something went wrong. Please check your internet connection.."
+
 
 @app.route('/Student/savefeedback/', methods = ['POST'])
 def student_save_feedback():
@@ -252,7 +261,7 @@ def faculty_home():
 			fid = session['fid']
 			fobj = Faculty.query.filter_by(fid = fid).first()
 			q = Student_and_advisor.query.filter_by(fid = fid).all()
-			return render_template('facultyHomepage.html', name = fobj.name, advisors_students = q)
+			return render_template('facultyHomepage.html', advisor = fobj, advisors_students = q)
 		else:
 			print('Please login')
 			return redirect(url_for('getFacultyLogin'))
@@ -279,3 +288,62 @@ def student_home():
 	except Exception as e:
 		print(e)
 		return "Error..."
+
+@app.route('/Faculty/giveFeedback/<usn>/')
+def get_faculty_feedback_page(usn):
+	"""Provide a interface for the advisor to view or to give feedback for the students"""
+	from University import Student, Faculty, Faculty_feedback
+	try:
+		if 'fid' in session:
+			fid = session['fid']
+			sobj = Student.query.filter_by(usn = usn).first()
+			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
+			q = Faculty_feedback.query.filter(_and(Faculty_feedback.fid == fid, Faculty_feedback.usn == usn))
+			return render_template('feedbackByFaculty.html', student = sobj, advisor = fobj, feedbacks = q)
+		else:
+			print('Please Login')
+			return redirect(url_for('getFacultyLogin'))
+	except Exception as e:
+		print(e)
+		return "Error..."
+
+
+@app.route('/admin/')
+def getAdminLogin():
+	return render_template('adminlogin.html')
+
+
+@app.route('/admin/login/', methods = ['POST'])
+def admin_login():
+	"""Process Admin login credentials"""
+	from University import Faculty_credential
+	try:
+		if request.method == 'POST':
+			password = request.form['password']
+			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == "admin2017" , Faculty_credential.password == password)).first()
+			if obj != None:
+				#return redirect(url_for('faculty_home', fid = fid))
+				session['fid'] = "admin2017"
+				#return "Success.."
+				return redirect(url_for('admin_home'))
+			else:
+				return "Incorrect password..."
+	except Exception as e:
+		print(e)
+		return "Error..."
+
+
+@app.route('/admin/home/')
+def admin_home():
+	if 'fid' in session and session['fid'] == 'admin2017':
+		return "Admin login success"
+		#return render_template('adminHomepage.html')
+
+'''
+@app.route('admin/scheduleMeet/', methods = ['POST'])
+def admin_schedule_meet():
+	try:
+		if request.method == 'POST':
+			date = 
+	TODO:	adminloginpage , adminHomepage, studentfeedbackPage
+'''
