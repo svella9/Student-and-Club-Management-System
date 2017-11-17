@@ -131,7 +131,7 @@ def send_notification():
 			students = Student.query.filter_by(sem = semester).all()
 			#keep only the email-id of the students
 			students = list(map(lambda x : x.email, students))
-			#print('sending Message', students)
+			print('sending Message', students)
 			msg = Message('Meeting Schedule Notification.',
 					sender = 'pesfacultyadvisor.sepro2017@gmail.com',
 					recipients = students)
