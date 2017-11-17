@@ -4,19 +4,17 @@
    
       <table border = 1>
          <thead>
-            <td>Name</td>
-            <td>Event Name</td>
+            <td>USN</td>
+            <td>Event Id</td>
          </thead>
          
          {% for row in rows %}
             <tr>
-               <td>{{row["name"]}}</td>
-               <td>{{row["event"]}}</td>
+               <td>{{row["usn"]}}</td>
+               <td>{{row["eventId"]}}</td>
             </tr>
          {% endfor %}
       </table>
-      
-      <a href = "/addNewEvent">Add more events</a>
       
    </body>
 </html>

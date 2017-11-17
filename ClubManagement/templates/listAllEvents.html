@@ -5,13 +5,15 @@
       <table border = 1>
          <thead>
             <td>Name</td>
-            <td>Head</td>
+            <td>Club ID</td>
+            <td>Event Id</td>
          </thead>
          
          {% for row in rows %}
             <tr>
                <td>{{row["name"]}}</td>
-               <td>{{row["head"]}}</td>
+               <td>{{row["clubId"]}}</td>
+               <td>{{row["eventId"]}}</td>
             </tr>
          {% endfor %}
       </table>
