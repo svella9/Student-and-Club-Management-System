@@ -9,6 +9,8 @@ int main() {
 	myfile.open("faculty.sql");
 	int i,j,k;
 	string insertStudents = "INSERT INTO student(usn,name,sem,dept,email,mob)";
+	string insertStudentCredential="INSERT INTO student_credential(usn,password)";
+	string insertFacultyCredential="INSERT INTO faculty_credential(fid,password)";
 	string insertFaculty = "INSERT INTO faculty(fid,name,dept,email,mob)";
 	string insertHall="INSERT INTO exam_hall(id,hallno,no_of_benches)";
 	string insertDept="INSERT INTO dept_subject_code(dept,scode)";
@@ -16,6 +18,7 @@ int main() {
 	string usn = "1PI";
 	string name = "";
 	string query = "";
+	string query2="";
 	int usnSem = 14;
 	int sem = 7;
 	myfile<<"use University;";
@@ -30,8 +33,9 @@ int main() {
 
 				}
 				query = insertStudents + " VALUES(\"" + usn + to_string(i) + "\",\"" + name + "\"," + to_string(sem) + ",\""+dept[k]+"\",\"" + name + "@gmail.com\",93938"+to_string(k) + to_string(sem * 100 + i) + ");";
-
+				query2=insertStudentCredential+ "VALUES(\""+usn+to_string(i)+"\",\""+usn+to_string(i)+"\");";
 				myfile << query<<endl;
+				myfile<<query2<<endl;
 
 
 			}
@@ -50,9 +54,9 @@ int main() {
 
 			}
 			query = insertFaculty + " VALUES(\"" + usn + to_string(i) + "\",\"" + name + "\",\""+dept[k]+"\",\"" + name + "@gmail.com\",93938"+to_string(k) + to_string(sem * 20 + i) + ");";
-
+			query2=insertFacultyCredential+ "VALUES(\""+usn+to_string(i)+"\",\""+usn+to_string(i)+"\");";
 			myfile << query << endl;
-
+			myfile<<query2<<endl;
 
 		}
 	}
