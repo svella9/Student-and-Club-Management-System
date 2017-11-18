@@ -94,7 +94,7 @@ class Student_and_advisor(db.Model):
 	usn = db.Column(db.String(12), db.ForeignKey('student.usn'), unique = True)
 	fid = db.Column(db.String(12), db.ForeignKey('faculty.fid'))
 
-	def __init__(self, usn, fid):
+	def __init__(self, usn, fid, student, faculty):
 		self.usn = usn
 		self.fid = fid
 		self.student = student

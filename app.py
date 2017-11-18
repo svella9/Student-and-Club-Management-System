@@ -459,7 +459,7 @@ def distribute(i,alloc,dep):
 	k=0
 	for j in range(0,n):
 		for b in range(1,alist[j]+1):
-			student_adv= Student_and_advisor(semstud[k].usn,faculties[j].fid )
+			student_adv= Student_and_advisor(semstud[k].usn,faculties[j].fid, semstud[k], faculties[j])
 			db.session.add(student_adv)
 			k+=1
 	db.session.commit()
