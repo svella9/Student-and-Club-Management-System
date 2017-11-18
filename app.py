@@ -279,6 +279,7 @@ def student_home():
 			usn = session['usn']
 			sobj = Student.query.filter_by(usn = usn).first()
 			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
+			fobj = Faculty.query.filter_by(fid = fobj.fid).first()
 			q = Student_feedback.query.filter_by(usn = usn).all()
 			return render_template('studentHomepage.html', student = sobj, advisor = fobj, feedbacks = q)
 		else:
@@ -418,7 +419,7 @@ def allocate_advisor():
 				#actually distributing faculties
 		for i in range(1,8,2):
 			distribute(i,alloc,dep)
-		return "Allocation done successfully!"
+	return "Allocation done successfully!"
 
 def create_spare(i,x,threshold,dep):
 	from University import Student, Faculty, Student_and_advisor
