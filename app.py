@@ -54,7 +54,7 @@ def student_register():
 	from University import Student, Faculty, Student_credential, Faculty_credential
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn'].lower()
+			usn = request.form['usn'].upper()
 			name = request.form['name']
 			sem = request.form['sem']
 			dept = request.form['dept']
@@ -90,7 +90,7 @@ def faculty_register():
 
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid'].lower()
+			fid = request.form['fid'].upper()
 			name = request.form['name']
 			dept = request.form['dept']
 			email = request.form['email']
@@ -152,7 +152,7 @@ def student_save_feedback():
 	from University import Student, Student_feedback
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn'].lower()
+			usn = request.form['usn'].upper()
 			feedback = request.form['feedback']
 
 			#get the student object from the table bearing the usn
@@ -175,8 +175,8 @@ def faculty_save_feedback():
 	from University import Student, Faculty, Faculty_feedback
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid'].lower()
-			student_usn = request.form['student_usn'].lower()
+			fid = request.form['fid'].upper()
+			student_usn = request.form['student_usn'].upper()
 			feedback = request.form['feedback']
 
 			#get the faculty object bearing the fid
@@ -200,7 +200,7 @@ def student_login():
 	from University import Student, Student_credential
 	try:
 		if request.method == 'POST':
-			usn = request.form['usn'].lower()
+			usn = request.form['usn']
 			password = request.form['password']
 			obj = Student_credential.query.filter(and_(Student_credential.usn == usn, Student_credential.password == password)).first()
 			if obj != None:
@@ -226,7 +226,7 @@ def faculty_login():
 	from University import Faculty, Faculty_credential
 	try:
 		if request.method == 'POST':
-			fid = request.form['fid'].lower()
+			fid = request.form['fid'].upper()
 			password = request.form['password']
 
 			obj = Faculty_credential.query.filter(and_(Faculty_credential.fid == fid , Faculty_credential.password == password)).first()
