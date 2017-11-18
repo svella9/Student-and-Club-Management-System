@@ -273,7 +273,7 @@ def faculty_home():
 
 @app.route('/Student/home/')
 def student_home():
-	from University import Student, Student_feedback, Student_and_advisor
+	from University import Student, Student_feedback, Student_and_advisor, Faculty
 	try:
 		if 'usn' in session:
 			usn = session['usn']
