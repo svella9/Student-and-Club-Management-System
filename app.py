@@ -346,11 +346,120 @@ def admin_home():
 	else:
 		return "Please go back and Login as admin..."
 
-'''
-@app.route('admin/scheduleMeet/', methods = ['POST'])
-def admin_schedule_meet():
-	try:
-		if request.method == 'POST':
-			date = 
-	TODO:	adminloginpage , adminHomepage, studentfeedbackPage
-'''
+
+
+
+
+#Sathkrith code
+
+@app.route('/main/allocate')
+def allocate_advisor():
+	from University import Student, Faculty, Student_and_advisor
+	dept=["CSE","ISE","EEE","ECE","MEE","BTE","CVE"]
+	for dep in dept:
+		students=Student.query.filter_by(dept=dep).all()
+		faculties=Faculty.query.filter_by(dept=dep).all()
+		#average no of students per faculty
+		print(len(students),len(faculties))
+		x=len(students)//len(faculties)
+		#sem no,extra students per faculty for that sem
+		sems=[[1,0],[3,0],[5,0],[7,0]]
+		#allocation list for each sem 0-not allocated  >1 no of faculty allocated <1 imdicates extra faculty required
+		alloc=[0,0,0,0,0,0,0,0]
+		#indicates the number of extra faculty available
+		spare=0
+		#max no of students a faculty can take over average no of students taken by faculty
+		threshold=0.33
+		#students saved so far
+		extra=0
+		run =0
+		#second field denotes m/n ratio used to determing best sem to create spare
+		sparelist=[[1,x],[3,x],[5,x],[7,x]]
+		print(x)
+		while(len(sems)>0):
+			for i in sems:
+				semstud= Student.query.filter(and_(Student.sem == i[0], Student.dept == dep)).all()
+				#print(len(semstud),"x:",x)
+				n=len(semstud)//x
+				m=len(semstud)%x
+				print(n,m)
+				if m/n<(threshold*x):
+					alloc[i[0]]=n
+					extra+=m
+					if(extra>x):
+						extra-=x
+						spare+=1
+						for j in sparelist:
+							if(i[0] == j[0]):
+								j[1] = m/n
+					sems.pop(sems.index(i))
+						#reduce the no of faculty required for sem if possible max spare required is 8 for 8 sems sems.pop(sem.index(i))
+				elif run<1:
+					i[1]=m/n
+				elif run>=1:
+						if(spare>0):
+							alloc[i[0]]=n+1
+							spare-=1
+							sems.pop(sems.index(i))
+						else :
+							#this sort is to use the sem with best chances of creating spare faculty
+							#can be improved extra students/no of faculty cannot be the sole factor in determining best sem for reduction
+							#checks only one sem for reduction...can be improved
+							sparelist.sort(key=lambda k: (-k[1]))
+							f=create_spare(sparelist[0][0],x,threshold,dep)
+							alloc[sparelist[0][0]]-=f
+							alloc[i[0]]=n+f
+							sparelist[0][1]*=((alloc[sparelist[0][0]]+f)/alloc[sparelist[0][0]])
+							sems.pop(sems.index(i))
+				#this sort is to address 1st in next run
+			print("done")
+			sems.sort(key=lambda k: (-k[1]))
+			run+=1
+				#actually distributing faculties
+		for i in range(1,8,2):
+			distribute(i,alloc,dep)
+		return "Allocation done successfully!"
+
+def create_spare(i,x,threshold,dep):
+	from University import Student, Faculty, Student_and_advisor
+	semstud= Student.query.filter(and_(Student.sem == i, Student.dept == dep)).all()
+	n=len(semstud)/x
+	m=len(semstud)%x
+	x=x+x*threshold
+	#using max no of stud per faculty
+	n1=len(semstud)/x
+	m1=len(semstud)%x
+	if n1<n:
+		return 1
+	else:
+		return 0
+
+def distribute(i,alloc,dep):
+	from University import Student, Faculty, Student_and_advisor
+	#alloc is the no of faculties allocated per sem
+	n=alloc[i]
+	semstud= Student.query.filter(and_(Student.sem == i, Student.dept == dep)).all()
+	alist=[]
+	for j in range(0,alloc[i]):
+		alist.append(len(semstud)//n)
+	m=len(semstud)%n
+	k=0
+	#alist contains exact no of students per faculty
+	while(m):
+		alist[k]+=1
+		m-=1
+		if k+1>n:
+			k=0
+		else:
+			k+=1
+	#sem =-1 indicates that faculty has not been assigned to any sem
+	#proposed: improve the algo by assigning experienced lecturers to students in later sem
+
+	faculties=Faculty.query.filter_by(dept=dep).all()
+	k=0
+	for j in range(0,n):
+		for b in range(1,alist[j]+1):
+			student_adv= Student_and_advisor(semstud[k].usn,faculties[j].fid )
+			db.session.add(student_adv)
+			k+=1
+	db.session.commit()
