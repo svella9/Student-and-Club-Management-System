@@ -1,8 +1,8 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Student Homepage</title>
-		
-		 <!-- CSS
+<head>
+	<title>Admin Home</title>
+			 <!-- CSS
     ================================================== -->       
     <!-- Bootstrap css file-->
     <link href="{{ url_for("static", filename = "css/bootstrap.min.css")}}" rel="stylesheet">
@@ -22,9 +22,9 @@
     <link id="switcher" href="{{ url_for("static", filename = "css/themes/default-theme.css")}}" rel="stylesheet">
     <!-- Main structure css file -->
     <link href="{{ url_for("static", filename = "css/style.css")}}" rel="stylesheet">
-		
-		
-		<style type="text/css">
+
+
+    		<style type="text/css">
 		#advisor
                {
 					color: red;
@@ -175,8 +175,10 @@
 		    }
 		}  
 		</style>
-	</head>	
-	<body>
+</head>
+<body>
+
+
 	<header id="header">
       <!-- BEGIN MENU -->
       <div class="menu_area">
@@ -191,26 +193,8 @@
             </div>
 			<div id="navbar" class="navbar-collapse collapse">
 			<ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
-                <li><a onclick="document.getElementById('id01').style.display='block'">New Feedback</a></li>
-
-					<div id="id01" class="modal">
-  
-					  <form class="modal-content animate" method = "post" action="{{ url_for('student_save_feedback') }}">
-					    <div class="imgcontainer">
-					      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-					    </div>
-
-					    <div class="container">
-					    	<input type="hidden" name="usn" value="{{ student.usn }}">
-					      <label><b>Enter Feedback</b></label>
-					      <textarea id="feedback" name="feedback" cols="50" rows="5" required></textarea>
-					      <!--<input type="text" placeholder="Enter Username" name="uname" required>-->
-					      <button type="submit">Submit</button>
-					    </div>
-					  </form>
-				</div>
-				<li><a href="#">Hello {{ student.name }}!</a></li>
-                <li><a href="{{ url_for('student_logout') }}">Logout</a></li>
+				<li><a href="#">Hello Admin!</a></li>
+                <li><a href="{{ url_for('admin_logout') }}">Logout</a></li>
               </ul>           
             </div><!--/.nav-collapse -->    
         </nav>  
@@ -218,40 +202,7 @@
       <!-- END MENU -->    
     </header>
 
-	
-	
-	
-<!--		<div id="sname">
-			Hello {{ student.name }}!</div>
-		<div>	<a href = "{{ url_for('student_logout') }}"></a>
-		<input type="button" id="log" value = "logout"></div> -->
+    
 
-
-		<div id="advisor">
-			Your Advisor : {{ advisor.name }}<br>
-			E-mail: {{ advisor.email }}<br>
-			Mob: {{ advisor.mob }}
-		</div><br>
-
-		<center>
-			{% if feedbacks|length > 0 %}
-			<div class="container">
-			<div class="table-responsive">
-			<table class="table table-striped">
-				<thead>
-					<tr><th>Date and Time</th><th>Feedback</th></tr>
-				</thead>
-				<tbody>
-					{% for feedback in feedbacks %}
-					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			</div>
-		</div>
-			{% else %}
-			<div style = "position:relative; bottom:-150px; "> No feedback given yet! </div>
-			{% endif %}
-		</center>
-	</body>
+</body>
 </html>

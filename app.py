@@ -333,11 +333,18 @@ def admin_login():
 		return "Error..."
 
 
+@app.route('/admin/logout/')
+def admin_logout():
+	session.pop('fid', None)
+	return redirect(url_for('getAdminLogin'))
+
 @app.route('/admin/home/')
 def admin_home():
 	if 'fid' in session and session['fid'] == 'admin2017':
-		return "Admin login success"
-		#return render_template('adminHomepage.html')
+		#return "Admin login success"
+		return render_template('adminHomepage.html')
+	else:
+		return "Please go back and Login as admin..."
 
 '''
 @app.route('admin/scheduleMeet/', methods = ['POST'])

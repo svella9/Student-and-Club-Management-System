@@ -1,19 +1,64 @@
 <html>
 <head>
 	<title>Faculty Homepage</title>
+	 <!-- CSS
+    ================================================== -->       
+    <!-- Bootstrap css file-->
+    <link href="{{ url_for("static", filename = "css/bootstrap.min.css")}}" rel="stylesheet">
+    <!-- Font awesome css file-->
+    <link href= "{{ url_for("static", filename = "css/font-awesome.min.css")}}" rel="stylesheet">
+    <!-- Superslide css file-->
+    <link rel="stylesheet" href= "{{ url_for("static", filename = "css/superslides.css")}}" >
+    <!-- Slick slider css file -->
+    <link href= "{{ url_for("static", filename = "css/slick.css")}}" rel="stylesheet"> 
+    <!-- Circle counter cdn css file -->
+    <link rel='stylesheet prefetch' href='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/css/jquery.circliful.css'>  
+    <!-- smooth animate css file -->
+    <link rel="stylesheet" href= "{{ url_for("static", filename = "css/animate.css")}}"> 
+    <!-- gallery slider css -->
+    <link type="text/css" media="all" rel="stylesheet" href="{{ url_for("static", filename = "css/jquery.tosrus.all.css")}}" />    
+    <!-- Default Theme css file -->
+    <link id="switcher" href="{{ url_for("static", filename = "css/themes/default-theme.css")}}" rel="stylesheet">
+    <!-- Main structure css file -->
+    <link href="{{ url_for("static", filename = "css/style.css")}}" rel="stylesheet">
+		
 	<style>
-
+    <!-- #adv { position:absolute;
+	           top=500;
+			   color: red;
+			   font-size:20px;}  -->
 	</style>
 </head>
 <body>
-	<div>
-		Hello {{ advisor.name }}!
-		<a href = "{{ url_for('faculty_logout') }}"><input type="button" value = "logout"></a>
-	</div>
-
+    <header id="header">
+      <!-- BEGIN MENU -->
+      <div class="menu_area">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+              <!-- LOGO -->
+              <!-- TEXT BASED LOGO -->
+              <a class="navbar-brand" href="#">PES <span>UNIVERSITY</span></a>              
+              <!-- IMG BASED LOGO  -->
+               <!-- <a class="navbar-brand" href="index.html"><img src="img/logo.png" alt="logo"></a>  -->            
+                     
+            </div>
+			<div id="navbar" class="navbar-collapse collapse">
+			<ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
+              <li><a href="#">Hello {{ advisor.name }}!</a></li> 
+                <li><a href="{{ url_for('faculty_logout') }}">Logout</a></li>
+              </ul>           
+            </div>
+			</div><!--/.nav-collapse -->    
+        </nav>  
+      </div>
+      <!-- END MENU -->    
+    </header>
+	
 	<center>
-		{% if advisors_students|length > 1 %}		
-		<table>
+		{% if advisors_students|length > 0 %}		
+		<div class="container">
+			<div class="table-responsive">
+			<table class="table table-striped">
 			<thead>
 				<tr><th>Student usn</th><th>Student name</th><th>Student e-mail</th></tr>
 			</thead>
@@ -23,9 +68,10 @@
 				{ % endfor % }
 			</tbody>
 		</table>
-		
+		</div>
+		</div>
 		{% else %}
-		<div> No students alloted yet!</div>
+		<div style="position:relative;bottom:-150px;"> No students alloted yet!</div>
 		{% endif %}
 	</center>
 </body>
