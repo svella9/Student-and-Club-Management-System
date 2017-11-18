@@ -176,7 +176,7 @@ def faculty_save_feedback():
 	try:
 		if request.method == 'POST':
 			fid = request.form['fid'].upper()
-			student_usn = request.form['student_usn'].upper()
+			student_usn = request.form['usn'].upper()
 			feedback = request.form['feedback']
 
 			#get the faculty object bearing the fid
@@ -191,7 +191,8 @@ def faculty_save_feedback():
 
 		else:
 			abort(400)
-	except:
+	except Exception as e:
+		print(e)
 		db.session.rollback()
 		return "Cannot save feedback..."
 
@@ -261,6 +262,7 @@ def faculty_home():
 			fid = session['fid']
 			fobj = Faculty.query.filter_by(fid = fid).first()
 			q = Student_and_advisor.query.filter_by(fid = fid).all()
+			print(q[0].student.name)
 			return render_template('facultyHomepage.html', advisor = fobj, advisors_students = q)
 		else:
 			print('Please login')
@@ -279,7 +281,8 @@ def student_home():
 			usn = session['usn']
 			sobj = Student.query.filter_by(usn = usn).first()
 			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
-			fobj = Faculty.query.filter_by(fid = fobj.fid).first()
+			if fobj != None:
+				fobj = Faculty.query.filter_by(fid = fobj.fid).first()
 			q = Student_feedback.query.filter_by(usn = usn).all()
 			return render_template('studentHomepage.html', student = sobj, advisor = fobj, feedbacks = q)
 		else:
@@ -293,13 +296,13 @@ def student_home():
 @app.route('/Faculty/giveFeedback/<usn>/')
 def get_faculty_feedback_page(usn):
 	"""Provide a interface for the advisor to view or to give feedback for the students"""
-	from University import Student, Faculty, Faculty_feedback
+	from University import Student, Faculty, Faculty_feedback, Student_and_advisor
 	try:
 		if 'fid' in session:
 			fid = session['fid']
 			sobj = Student.query.filter_by(usn = usn).first()
 			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
-			q = Faculty_feedback.query.filter(_and(Faculty_feedback.fid == fid, Faculty_feedback.usn == usn))
+			q = Faculty_feedback.query.filter(and_(Faculty_feedback.fid == fid, Faculty_feedback.student_usn == usn)).all()
 			return render_template('feedbackByFaculty.html', student = sobj, advisor = fobj, feedbacks = q)
 		else:
 			print('Please Login')

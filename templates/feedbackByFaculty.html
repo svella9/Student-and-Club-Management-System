@@ -9,22 +9,22 @@
 
 <body>
 	<form method="post" action="{{ url_for('faculty_save_feedback') }}">
-		<textarea id="feedback" name="feedback" cols="86" rows="15"></textarea>
+		<textarea id="feedback" name="feedback" cols="50" rows="5"></textarea>
 		<input type="hidden" name="fid" value="{{ advisor.fid }}">
-		<input type="hidden" name="usn" value="{{ student.usn }}">
+		<input type="hidden" name="usn" value="{{ student.usn }}"><br>
 		<input type="submit" value="Submit Feedback">
 	</form><br>
 
 	<center>
-			{% if feedbacks|length > 1 %}
+			{% if feedbacks|length > 0 %}
 			<table>
 				<thead>
 					<tr><th>Date and Time</th><th>Feedback</th></tr>
 				</thead>
 				<tbody>
-					{ % for feedback in feedbacks % }
+					{% for feedback in feedbacks %}
 					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
-					{ % endfor % }
+					{% endfor %}
 				</tbody>
 			</table>
 			{% else %}
