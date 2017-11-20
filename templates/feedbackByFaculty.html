@@ -17,6 +17,7 @@
 
 	<center>
 			{% if feedbacks|length > 0 %}
+			<b>Your Feedbacks</b>
 			<table>
 				<thead>
 					<tr><th>Date and Time</th><th>Feedback</th></tr>
@@ -28,7 +29,24 @@
 				</tbody>
 			</table>
 			{% else %}
-			<div> No feedback given yet! </div>
+			<div> <b>No feedback given yet!</b> </div>
+			{% endif %}
+			<br><br>
+
+			{% if student_feedbacks|length > 0 %}
+			<b>Student Feedbacks</b>
+			<table>
+				<thead>
+					<tr><th>Date and Time</th><th>Feedback</th></tr>
+				</thead>
+				<tbody>
+					{% for feedback in student_feedbacks %}
+					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+			<div><b> No feedback given yet by the student!</b> </div>
 			{% endif %}
 	</center>
 </body>

@@ -234,7 +234,7 @@ def faculty_login():
 			if obj != None:
 				#return redirect(url_for('faculty_home', fid = fid))
 				session['fid'] = fid
-				print(session['fid'])
+				#print(session['fid'])
 				#return "Success.."
 				return redirect(url_for('faculty_home'))
 			else:
@@ -262,7 +262,7 @@ def faculty_home():
 			fid = session['fid']
 			fobj = Faculty.query.filter_by(fid = fid).first()
 			q = Student_and_advisor.query.filter_by(fid = fid).all()
-			print(q[0].student.name)
+			#print(q[0].student.name)
 			return render_template('facultyHomepage.html', advisor = fobj, advisors_students = q)
 		else:
 			print('Please login')
@@ -296,14 +296,15 @@ def student_home():
 @app.route('/Faculty/giveFeedback/<usn>/')
 def get_faculty_feedback_page(usn):
 	"""Provide a interface for the advisor to view or to give feedback for the students"""
-	from University import Student, Faculty, Faculty_feedback, Student_and_advisor
+	from University import Student, Faculty, Faculty_feedback, Student_feedback, Student_and_advisor
 	try:
 		if 'fid' in session:
 			fid = session['fid']
 			sobj = Student.query.filter_by(usn = usn).first()
 			fobj = Student_and_advisor.query.filter_by(usn = usn).first()
 			q = Faculty_feedback.query.filter(and_(Faculty_feedback.fid == fid, Faculty_feedback.student_usn == usn)).all()
-			return render_template('feedbackByFaculty.html', student = sobj, advisor = fobj, feedbacks = q)
+			stud_q = Student_feedback.query.filter_by(usn = usn).all()
+			return render_template('feedbackByFaculty.html', student = sobj, advisor = fobj, feedbacks = q, student_feedbacks = stud_q)
 		else:
 			print('Please Login')
 			return redirect(url_for('getFacultyLogin'))

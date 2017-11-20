@@ -25,7 +25,7 @@
 
 
     		<style type="text/css">
-		#advisor
+		#mydiv
                {
 					color: red;
 					font-size:20px;
@@ -34,6 +34,7 @@
 					position:relative;
 					bottom:-110px;
 					left: 440px;
+					display: block;
 					
  			   }
         #log {
@@ -97,9 +98,8 @@
 		    margin: 8px 0;
 		    border: none;
 		    cursor: pointer;
-		    width: 95%;
+		    width: 55%;
 		}
-
 		button:hover {
 		    opacity: 0.8;
 		}
@@ -201,8 +201,46 @@
       </div>
       <!-- END MENU -->    
     </header>
+	<!--<div style="position:relative; bottom:-500px"> -->
+ <div class="container" style="position:relative; bottom:-120px; height:600px;"> 
+ 
+ <button type="button" class="btn btn-warning btn-block" onclick="document.getElementById('id01').style.display='block'">Schedule meet and send notification</button>
+<!-- <a onclick="document.getElementById('id01').style.display='block'">New Feedback</a> -->
+  <div id="id01" class="modal">
+  
+					  <form class="modal-content animate" method = "post" action="{{ url_for('send_notification') }}">
+					    <div class="imgcontainer">
+					      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+					    </div>
 
+					    <div class="container">
+					    	
+					      <label><b>Enter Date:</b></label>
+					      
+					      <input type="date" placeholder="Date" name="date" required><br><br>
+						  <label><b>Select semester:</b></label>
+						  <select name="semester">
+						     <option value="1">1</option>
+							 <option value="2">2</option>
+							 <option value="3">3</option>
+							 <option value="4">4</option>
+							 <option value="5">5</option>
+							 <option value="6">6</option>
+							 <option value="7">7</option>
+						  </select>	 
+						  </label><br><br>
+					      <button type="submit">Submit</button>
+					    </div>
+					  </form>
+				</div>
+   
+  <a href = "{{ url_for('allocate_advisor') }}"><button type="button" class="btn btn-default btn-block">allot advisors</button></a>
+
+</div>
     
 
+
+	 <!--<div style="position:absolute bottom:-15px">hi</div>
+	<button style="position:relative top:800px">I am a Button</button> -->
 </body>
 </html>
