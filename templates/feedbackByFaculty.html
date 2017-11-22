@@ -2,25 +2,74 @@
 <html>
 <head>
 	<title>Faculty Feedback</title>
+
+	<!-- CSS
+    ================================================== -->       
+    <!-- Bootstrap css file-->
+    <link href="{{ url_for("static", filename = "css/bootstrap.min.css")}}" rel="stylesheet">
+    <!-- Font awesome css file-->
+    <link href= "{{ url_for("static", filename = "css/font-awesome.min.css")}}" rel="stylesheet">
+    <!-- Superslide css file-->
+    <link rel="stylesheet" href= "{{ url_for("static", filename = "css/superslides.css")}}" >
+    <!-- Slick slider css file -->
+    <link href= "{{ url_for("static", filename = "css/slick.css")}}" rel="stylesheet"> 
+    <!-- Circle counter cdn css file -->
+    <link rel='stylesheet prefetch' href='https://cdn.rawgit.com/pguso/jquery-plugin-circliful/master/css/jquery.circliful.css'>  
+    <!-- smooth animate css file -->
+    <link rel="stylesheet" href= "{{ url_for("static", filename = "css/animate.css")}}"> 
+    <!-- gallery slider css -->
+    <link type="text/css" media="all" rel="stylesheet" href="{{ url_for("static", filename = "css/jquery.tosrus.all.css")}}" />    
+    <!-- Default Theme css file -->
+    <link id="switcher" href="{{ url_for("static", filename = "css/themes/default-theme.css")}}" rel="stylesheet">
+    <!-- Main structure css file -->
+    <link href="{{ url_for("static", filename = "css/style.css")}}" rel="stylesheet">
+	
 	<style type="text/css">
 		
 	</style>
 </head>
 
 <body>
-	<form method="post" action="{{ url_for('faculty_save_feedback') }}">
-		<textarea id="feedback" name="feedback" cols="50" rows="5"></textarea>
+	    <header id="header">
+      <!-- BEGIN MENU -->
+      <div class="menu_area">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+              <!-- LOGO -->
+              <!-- TEXT BASED LOGO -->
+              <a class="navbar-brand" href="#">PES <span>UNIVERSITY</span></a>              
+            </div>
+			<div id="navbar" class="navbar-collapse collapse">
+			<ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
+              <li><a href="#">Hello {{ advisor.name }}!</a></li> 
+                <li><a href="{{ url_for('faculty_logout') }}">Logout</a></li>
+              </ul>           
+            </div>
+			</div><!--/.nav-collapse -->    
+        </nav>  
+      </div>
+      <!-- END MENU -->    
+    </header>
+
+
+	<form class = "form-horizontal" method="post" action="{{ url_for('faculty_save_feedback') }}">
+		<div class="form-group">
+		<label for="comment">Enter Feedback: </label>
+		<textarea class = "form-control" id="feedback" name="feedback" cols="40" rows="5"></textarea>
+		</div>
 		<input type="hidden" name="fid" value="{{ advisor.fid }}">
 		<input type="hidden" name="usn" value="{{ student.usn }}"><br>
-		<input type="submit" value="Submit Feedback">
+		<button class="btn btn-default" type="submit">Submit Feedback</button>
 	</form><br>
 
 	<center>
 			{% if feedbacks|length > 0 %}
 			<b>Your Feedbacks</b>
-			<table>
-				<thead>
-					<tr><th>Date and Time</th><th>Feedback</th></tr>
+			<div class="container">
+			<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>	
+				<tr><th>Date and Time</th><th>Feedback</th></tr>
 				</thead>
 				<tbody>
 					{% for feedback in feedbacks %}
@@ -28,6 +77,8 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			</div>
+			</div>
 			{% else %}
 			<div> <b>No feedback given yet!</b> </div>
 			{% endif %}
@@ -35,9 +86,11 @@
 
 			{% if student_feedbacks|length > 0 %}
 			<b>Student Feedbacks</b>
-			<table>
+			<div class="container">
+			<div class="table-responsive">
+			<table class="table table-striped">
 				<thead>
-					<tr><th>Date and Time</th><th>Feedback</th></tr>
+				<tr><th>Date and Time</th><th>Feedback</th></tr>
 				</thead>
 				<tbody>
 					{% for feedback in student_feedbacks %}
@@ -45,6 +98,8 @@
 					{% endfor %}
 				</tbody>
 			</table>
+			</div>
+			</div>
 			{% else %}
 			<div><b> No feedback given yet by the student!</b> </div>
 			{% endif %}
