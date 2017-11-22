@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 <html>
 <head>
-	<title>Faculty Homepage</title>
-	 <!-- CSS
+	<title>Faculty Feedback</title>
+
+	<!-- CSS
     ================================================== -->       
     <!-- Bootstrap css file-->
     <link href="{{ url_for("static", filename = "css/bootstrap.min.css")}}" rel="stylesheet">
@@ -21,16 +23,14 @@
     <link id="switcher" href="{{ url_for("static", filename = "css/themes/default-theme.css")}}" rel="stylesheet">
     <!-- Main structure css file -->
     <link href="{{ url_for("static", filename = "css/style.css")}}" rel="stylesheet">
+	
+	<style type="text/css">
 		
-	<style>
-    <!-- #adv { position:absolute;
-	           top=500;
-			   color: red;
-			   font-size:20px;}  -->
 	</style>
 </head>
+
 <body>
-    <header id="header">
+	    <header id="header">
       <!-- BEGIN MENU -->
       <div class="menu_area">
         <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -38,9 +38,6 @@
               <!-- LOGO -->
               <!-- TEXT BASED LOGO -->
               <a class="navbar-brand" href="#">PES <span>UNIVERSITY</span></a>              
-              <!-- IMG BASED LOGO  -->
-               <!-- <a class="navbar-brand" href="index.html"><img src="img/logo.png" alt="logo"></a>  -->            
-                     
             </div>
 			<div id="navbar" class="navbar-collapse collapse">
 			<ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
@@ -53,26 +50,59 @@
       </div>
       <!-- END MENU -->    
     </header>
-	
+
+
+	<form class = "form-horizontal" method="post" action="{{ url_for('faculty_save_feedback') }}">
+		<div class="form-group">
+		<label for="comment">Enter Feedback: </label>
+		<textarea class = "form-control" id="feedback" name="feedback" cols="40" rows="5"></textarea>
+		</div>
+		<input type="hidden" name="fid" value="{{ advisor.fid }}">
+		<input type="hidden" name="usn" value="{{ student.usn }}"><br>
+		<button class="btn btn-default" type="submit">Submit Feedback</button>
+	</form><br>
+
 	<center>
-		{% if advisors_students|length > 0 %}		
-		<div class="container">
+			{% if feedbacks|length > 0 %}
+			<b>Your Feedbacks</b>
+			<div class="container">
 			<div class="table-responsive">
 			<table class="table table-striped">
-			<thead>
-				<tr><th>Student usn</th><th>Student name</th><th>Student e-mail</th></tr>
-			</thead>
-			<tbody>
-				{% for s in advisors_students %}
-				<tr><td><a href = "{{ url_for('get_faculty_feedback_page', usn = s.student.usn ) }}"> {{ s.student.usn }}</a> </td><td> {{ s.student.name }} </td><td> {{ s.student.email }} </td></tr>
-				{% endfor %}
-			</tbody>
-		</table>
-		</div>
-		</div>
-		{% else %}
-		<div style="position:relative;bottom:-150px;"> No students alloted yet!</div>
-		{% endif %}
+				<thead>	
+				<tr><th>Date and Time</th><th>Feedback</th></tr>
+				</thead>
+				<tbody>
+					{% for feedback in feedbacks %}
+					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			</div>
+			</div>
+			{% else %}
+			<div> <b>No feedback given yet!</b> </div>
+			{% endif %}
+			<br><br>
+
+			{% if student_feedbacks|length > 0 %}
+			<b>Student Feedbacks</b>
+			<div class="container">
+			<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+				<tr><th>Date and Time</th><th>Feedback</th></tr>
+				</thead>
+				<tbody>
+					{% for feedback in student_feedbacks %}
+					<tr><td> {{ feedback.date }} </td><td> {{ feedback.feedback }} </td></tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			</div>
+			</div>
+			{% else %}
+			<div><b> No feedback given yet by the student!</b> </div>
+			{% endif %}
 	</center>
 </body>
 </html>

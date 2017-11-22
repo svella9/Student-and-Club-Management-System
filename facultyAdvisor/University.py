@@ -9,7 +9,7 @@ class Student(db.Model):
 	sem = db.Column(db.Integer)
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
-	mob = db.Column(db.Integer, unique = True)
+	mob = db.Column(db.BigInteger, unique = True)
 
 	#foreign key relationship
 	#backref: creates a virtual column called 'student' in 'Student_feedback' class that references the 'Student' class.
@@ -33,7 +33,7 @@ class Faculty(db.Model):
 	name = db.Column(db.String(25))
 	dept = db.Column(db.String(3))
 	email = db.Column(db.String(50), unique = True)
-	mob = db.Column(db.Integer, unique = True)
+	mob = db.Column(db.BigInteger, unique = True)
 
 	feedback_by_faculty = db.relationship('Faculty_feedback', backref = 'faculty', lazy = 'dynamic')
 	faculty_advisor = db.relationship('Student_and_advisor', backref = 'faculty', lazy = 'dynamic' )
@@ -58,7 +58,7 @@ class Student_credential(db.Model):
 
 class Faculty_credential(db.Model):
 	fid = db.Column(db.String(12), primary_key = True)
-	password = db.Column(db.String(50), primary_key = True)
+	password = db.Column(db.String(50))
 
 	def __init__(self, fid, password):
 		self.fid = fid
@@ -94,10 +94,11 @@ class Student_and_advisor(db.Model):
 	usn = db.Column(db.String(12), db.ForeignKey('student.usn'), unique = True)
 	fid = db.Column(db.String(12), db.ForeignKey('faculty.fid'))
 
-	def __init__(self, usn, fid):
+	def __init__(self, usn, fid, student, faculty):
 		self.usn = usn
 		self.fid = fid
 		self.student = student
 		self.faculty = faculty
+
 
 db.create_all()
