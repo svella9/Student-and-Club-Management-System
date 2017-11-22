@@ -12,9 +12,11 @@ class Attendance(db.Model):
 	#id = db.Column(db.Integer,primary_key = True)
 	eventId= db.Column(db.String(10),db.ForeignKey('event.eventId'),primary_key = True)	
 	usn = db.Column(db.String(10),db.ForeignKey('member.usn'),primary_key = True)
-	date= db.column(db.String(20))
+	date = db.Column(db.DateTime(),primary_key = True)
+	print(date)
 	def __init__(self,eventId,usn,date):
 		self.usn = usn
+		print(date)
 		self.eventId = eventId
 		self.date = date		
 
