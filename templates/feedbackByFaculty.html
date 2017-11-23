@@ -41,7 +41,7 @@
             </div>
 			<div id="navbar" class="navbar-collapse collapse">
 			<ul id="top-menu" class="nav navbar-nav navbar-right main-nav">
-              <li><a href="#">Hello {{ advisor.name }}!</a></li> 
+              <li><a href="#">Hello {{ advisor.faculty.name }}!</a></li> 
                 <li><a href="{{ url_for('faculty_logout') }}">Logout</a></li>
               </ul>           
             </div>
@@ -53,7 +53,8 @@
 
 <br>
 <br><br><br><br>
-	<form class = "form-horizontal" method="post" action="{{ url_for('faculty_save_feedback') }}">
+	<div class="container">
+	<form class = "form-inline" method="post" action="{{ url_for('faculty_save_feedback') }}">
 		<div class="form-group">
 		<label for="comment">Enter Feedback: </label>
 		<textarea class = "form-control" id="feedback" name="feedback" cols="40" rows="5"></textarea>
@@ -62,6 +63,7 @@
 		<input type="hidden" name="usn" value="{{ student.usn }}"><br>
 		<button class="btn btn-default" type="submit">Submit Feedback</button>
 	</form><br>
+	</div>
 
 	<center>
 			{% if feedbacks|length > 0 %}

@@ -30,7 +30,6 @@ mail = Mail(app)
 
 @app.route('/')
 def index():
-	#return "Hello World!!"
 	return render_template('FacultyAdvisor.html')
 
 @app.route('/getStudentLogin/')
@@ -275,6 +274,7 @@ def faculty_home():
 
 @app.route('/Student/home/')
 def student_home():
+	"""Render Student homepage with advisor details, his feedbacks and a form to submit new feedback"""
 	from University import Student, Student_feedback, Student_and_advisor, Faculty
 	try:
 		if 'usn' in session:
