@@ -5990,4 +5990,3 @@ INSERT INTO faculty(fid,name,dept,email,mob) VALUES('CVE15','kgphx','CVE','kgphx
 INSERT INTO faculty_credential(fid,password)VALUES('CVE15','CVE15');
 INSERT INTO faculty(fid,name,dept,email,mob) VALUES('CVE16','babrg','CVE','babrg@gmail.com',93938626);
 INSERT INTO faculty_credential(fid,password)VALUES('CVE16','CVE16');
-
