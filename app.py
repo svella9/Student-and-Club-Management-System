@@ -120,12 +120,12 @@ def faculty_register():
 @app.route('/admin/notify/', methods = ['POST'])
 def send_notification():
 	"""Send notification to all students belonging to a particular semester"""
+	from University import Student, Faculty
 	try:
 		if request.method == 'POST':
 			date = request.form['date']
 			semester = request.form['semester']
 
-			from University import Student
 			#query to retrieve students
 			students = Student.query.filter_by(sem = semester).all()
 			faculties = Faculty.query.all()
