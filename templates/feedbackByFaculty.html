@@ -56,14 +56,14 @@
 	<div class="container">
 	<form class = "form-inline" method="post" action="{{ url_for('faculty_save_feedback') }}">
 		<div class="form-group">
-		<label for="comment">Enter Feedback: </label>
+		<label for="comment">Enter Feedback: </label><br>
 		<textarea class = "form-control" id="feedback" name="feedback" cols="40" rows="5"></textarea>
 		</div>
 		<input type="hidden" name="fid" value="{{ advisor.fid }}">
 		<input type="hidden" name="usn" value="{{ student.usn }}"><br>
 		<button class="btn btn-default" type="submit">Submit Feedback</button>
-	</form><br>
-	</div>
+	</form>
+	</div><br>
 
 	<center>
 			{% if feedbacks|length > 0 %}

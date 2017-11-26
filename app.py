@@ -128,12 +128,14 @@ def send_notification():
 			from University import Student
 			#query to retrieve students
 			students = Student.query.filter_by(sem = semester).all()
+			faculties = Faculty.query.all()
 			#keep only the email-id of the students
 			students = list(map(lambda x : x.email, students))
+			faculties = list(map(lambda x: x.email, faculties))
 			print('sending Message', students)
 			msg = Message('Meeting Schedule Notification.',
 					sender = 'pesfacultyadvisor.sepro2017@gmail.com',
-					recipients = students)
+					recipients = students , cc = faculties)
 			#print('Object created!')
 			msg.body = "Dear Student\n A meeting is scheduled on " + date + ".\n We request you to meet your faculty advisor."
 			mail.send(msg)
