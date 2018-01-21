@@ -233,6 +233,33 @@
 					    </div>
 					  </form>
 				</div>
+
+	<button type="button" class="btn btn-warning btn-block" onclick="document.getElementById('id02').style.display='block'">Collect Feedbacks and generate PDF</button>
+<!-- <a onclick="document.getElementById('id01').style.display='block'">New Feedback</a> -->
+  <div id="id02" class="modal">
+  
+					  <form class="modal-content animate" method = "post" action="{{ url_for('generate_report_of_feedback') }}">
+					    <div class="imgcontainer">
+					      <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+					    </div>
+
+					    <div class="container">
+					    	
+						  <label><b>Select semester:</b></label>
+						  <select name="sem">
+						     <option value="1">1</option>
+							 <option value="2">2</option>
+							 <option value="3">3</option>
+							 <option value="4">4</option>
+							 <option value="5">5</option>
+							 <option value="6">6</option>
+							 <option value="7">7</option>
+						  </select>	 
+						  </label><br><br>
+					      <button type="submit">Submit</button>
+					    </div>
+					  </form>
+				</div>
    
   <a href = "{{ url_for('allocate_advisor') }}"><button type="button" class="btn btn-default btn-block">allot advisors</button></a>
 

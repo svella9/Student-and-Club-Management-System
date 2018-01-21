@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+  	body 
+  	{ 
+    	background: lightblue url("{{url_for('static', filename = 'img1.jpg')}}") no-repeat fixed center;
+    	background-size: 100%;
+    	color: white;
+
+	}
+</style>
+  
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+
+      <a class="navbar-brand" href="/">Club Management System</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li>  <a class="navbar-brand" href="index.html">PES <span>University</span></a></li>	
+      <li><a href="/addNewClub">New Club</a></li>
+      <li><a href="/addNewMember">New Member</a></li>
+      <li><a href="/addNewEvent">New Event</a></li>
+      <li><a href="/addVolunterForAnEvent">New Volunteer</a></li>
+      <li><a href="/listAllMembers">View Members</a></li>
+      <li><a href="/listAllEvents">View Event</a></li>
+      <li><a href="/listAllVolunteers">View Volunteer</a></li>
+      <li><a href="/markAttendanceOfAnEvent">Mark Attendance</a></li>
+      <li><a href="/listAllAttendance">View Attendance</a></li>
+    </ul>
+  </div>
+</nav>
+  
+
+<div class="container">
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+  <h3>Welcome</h3>
+
+  <p>This is an automated Club Management System<br>Here you can create new <i>Clubs, </i>Add new <i>Events</i> under each of these clubs, add new <i>Members</i> for the club.</p>
+</div>
+
+</body>
+</html>

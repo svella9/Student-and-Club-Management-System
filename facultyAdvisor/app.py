@@ -1,8 +1,9 @@
-from flask import Flask, flash, request, redirect, abort, render_template, session, url_for
+from flask import Flask, flash, request, redirect, abort, render_template, session, url_for, send_file
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy.exc
 from sqlalchemy import and_, or_
 from flask_mail import Mail, Message
+from fpdf import FPDF
 
 app = Flask(__name__)
 POSTGRES = {
@@ -30,7 +31,6 @@ mail = Mail(app)
 
 @app.route('/')
 def index():
-	#return "Hello World!!"
 	return render_template('FacultyAdvisor.html')
 
 @app.route('/getStudentLogin/')
@@ -121,20 +121,22 @@ def faculty_register():
 @app.route('/admin/notify/', methods = ['POST'])
 def send_notification():
 	"""Send notification to all students belonging to a particular semester"""
+	from University import Student, Faculty
 	try:
 		if request.method == 'POST':
 			date = request.form['date']
 			semester = request.form['semester']
 
-			from University import Student
 			#query to retrieve students
 			students = Student.query.filter_by(sem = semester).all()
+			faculties = Faculty.query.all()
 			#keep only the email-id of the students
 			students = list(map(lambda x : x.email, students))
+			faculties = list(map(lambda x: x.email, faculties))
 			print('sending Message', students)
 			msg = Message('Meeting Schedule Notification.',
 					sender = 'pesfacultyadvisor.sepro2017@gmail.com',
-					recipients = students)
+					recipients = students[len(students) - 100: ] , cc = faculties[len(faculties) - 100 : ])
 			#print('Object created!')
 			msg.body = "Dear Student\n A meeting is scheduled on " + date + ".\n We request you to meet your faculty advisor."
 			mail.send(msg)
@@ -275,6 +277,7 @@ def faculty_home():
 
 @app.route('/Student/home/')
 def student_home():
+	"""Render Student homepage with advisor details, his feedbacks and a form to submit new feedback"""
 	from University import Student, Student_feedback, Student_and_advisor, Faculty
 	try:
 		if 'usn' in session:
@@ -468,3 +471,32 @@ def distribute(i,alloc,dep):
 			db.session.add(student_adv)
 			k+=1
 	db.session.commit()
+
+
+
+@app.route('/admin/generateReport/', methods = ['POST'])
+def generate_report_of_feedback():
+	"""Queries the database and collects all feedbacks of students from a particular semester"""
+	try:
+		from University import Student, Student_feedback
+		if request.method == 'POST':
+			semester = request.form['sem']
+			feedbacks = Student_feedback.query.join(Student, Student_feedback.usn == Student.usn).filter(Student.sem == semester).all()
+			s = str()
+			for feedback in feedbacks:
+				s += (feedback.usn + '\t\t' + feedback.feedback + '\n')
+			pdf = FPDF()
+			pdf.add_page()
+			pdf.set_xy(5, 5)
+			pdf.set_font('arial', 'B', 9.0)
+			pdf.cell(ln=0, h=0.5, align='L', w=0, txt=s, border = 0)
+			pdf.output('Report.pdf', 'F')
+
+			#return "Report Generated!"
+			return send_file('Report.pdf', as_attachment = True)
+		else:
+			abort(400)
+
+	except Exception as e:
+		print(e)
+		return "Something went wrong"

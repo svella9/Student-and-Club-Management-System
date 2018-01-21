@@ -1,16 +1,49 @@
 <html>
-   <body>
-      
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <body>
+        <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Club Management System</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/addNewClub">New Club</a></li>
+      <li><a href="/addNewMember">New Member</a></li>
+      <li><a href="/addNewEvent">New Event</a></li>
+      <li><a href="/addVolunterForAnEvent">New Volunteer</a></li>
+      <li><a href="/listAllMembers">View Members</a></li>
+      <li><a href="/listAllEvents">View Event</a></li>
+      <li><a href="/listAllVolunteers">View Volunteer</a></li>
+      <li><a href="/markAttendanceOfAnEvent">Mark Attendance</a></li>
+      <li><a href="/listAllAttendance">View Attendance</a></li>
+    </ul>
+  </div>
+</nav>
+      <div class="container">
       <form action = "{{ url_for('markAttendanceToDatabase') }}" method = "POST">
-         <h3>Attendance Information</h3>
-         Event Id<br>
-         <input type = "text" name = "eventId" /></br>
-         USN<br>
-         <input type = "text" name = "usn" /></br>
-         Date<br>
-         <input type = "date" name = "date" /></br>
-         <input type = "submit" value = "submit" /><br>
+             <p class="h3 text-center mb-4">Attendance Information</p>
+      <div class="md-form">
+        <i class="fa fa-envelope prefix grey-text"></i>
+        <input type="text" id="defaultForm-email" name="eventId" class="form-control">
+        <label for="defaultForm-email">Event ID</label>
+    </div>
+    <br>
+    <div class="md-form">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input type="text" id="defaultForm-pass" name = "usn" class="form-control">
+        <label for="defaultForm-pass">USN</label>
+    </div>
+    <br>
+    <div class="md-form">
+        <i class="fa fa-lock prefix grey-text"></i>
+        <input type="date" id="defaultForm-pass" name = "date" class="form-control">
+        <label for="defaultForm-pass">Date</label>
+    </div>
+    <br>
+    <div class="text-center">
+        <input type = "submit" value = "submit" class="btn btn-default"/><br>
+    </div>
       </form>
-      
+      </div>
    </body>
 </html>

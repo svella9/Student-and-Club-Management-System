@@ -3,6 +3,7 @@ click==6.7
 Flask==0.12.2
 Flask-Mail==0.9.1
 Flask-SQLAlchemy==2.3.1
+fpdf==1.7.2
 gunicorn==19.7.1
 itsdangerous==0.24
 Jinja2==2.9.6

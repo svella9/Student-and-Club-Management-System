@@ -1,6 +1,6 @@
 from app import db
 
-class Event_Volenteers(db.Model):
+class Event_Volenteers(db.Model): #creates event volunteer table
 	#id = db.Column(db.Integer,primary_key=True)
 	usn = db.Column(db.String(10),db.ForeignKey('member.usn'), primary_key = True)
 	eventId= db.Column(db.String(10),db.ForeignKey('event.eventId'), primary_key = True)	
@@ -8,7 +8,7 @@ class Event_Volenteers(db.Model):
 		self.usn = usn
 		self.eventId = eventId				
 
-class Attendance(db.Model):
+class Attendance(db.Model): #creates attendance table
 	#id = db.Column(db.Integer,primary_key = True)
 	eventId= db.Column(db.String(10),db.ForeignKey('event.eventId'),primary_key = True)	
 	usn = db.Column(db.String(10),db.ForeignKey('member.usn'),primary_key = True)
@@ -21,7 +21,7 @@ class Attendance(db.Model):
 		self.date = date		
 
 
-class Club(db.Model):
+class Club(db.Model): #creates club table
 	name = db.Column(db.String(50))
 	id = db.Column(db.String(10), primary_key = True)
 	member_constraint = db.relationship('Member', backref='member',lazy='dynamic')
@@ -30,7 +30,7 @@ class Club(db.Model):
 		self.name = name
 		self.id = id
 
-class Member(db.Model):
+class Member(db.Model): #creates member table
 	usn = db.Column(db.String(10),primary_key=True)
 	name = db.Column(db.String(20))
 	clubId = db.Column(db.String(10), db.ForeignKey('club.id'))
@@ -43,7 +43,7 @@ class Member(db.Model):
 		self.clubId = cId
 		self.email = email
 
-class Event(db.Model):
+class Event(db.Model): #creates event table
 	eventId = db.Column(db.String(10), primary_key = True)
 	name = db.Column(db.String(25))	
 	clubId = db.Column(db.String(10), db.ForeignKey('club.id'))
