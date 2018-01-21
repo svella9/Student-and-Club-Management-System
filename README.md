@@ -10,3 +10,5 @@ give input about the type of arrangement required for example for seat allotment
 total capacity, total number of students, total number of faculty, details of student, etc., our system will generate a seating allotment for 
 the same along with the invigilators name. Also a similar interface is present for club management system where all the details about the 
 clubs/groups of a college can be entered and can be used by the management to keep track about  the clubs and it various activities.
+
+View the site [here](https://team6-seproject.herokuapp.com)
